@@ -13,7 +13,11 @@ app.use(express.json())
 ///// endPoints
 app.get('/books', ModuleUser.getAllUsers);
 app.post('/newBook', ModuleUser.addNewBook);
+app.use(express.json());
 
+mongoose.connect(`mongodb://localhost:${process.env.DATABASE_URL}/books`, { useNewUrlParser: true, useUnifiedTopology: true });
+
+app.delete('/books/:index', ModuleUser.deleteBooks);
 
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
