@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+mongoose.connect(`mongodb://localhost:${process.env.DATABASE_URL}/books`, {useNewUrlParser: true, useUnifiedTopology: true});
+
 
 const books = new mongoose.Schema({
     name: String,
@@ -48,30 +50,43 @@ function adduser(){
     abeer.save();
 }
 
-function doSomething(req,res){
+function getAllUsers(req,res){
 
     const {Email}=req.query
     
 
-    UserModel.find({ Email:Email }, function (err, kittens) {
+    UserModel.find({ Email:Email }, function (err, users) {
         if (err) return console.error(err);
-        // return kittens;
-        res.send(kittens)
+        res.send(users)
     });
 }
 
-// UserModel.find(function (err, kittens) {
-//     if (err) return console.error(err);
-//     // return kittens;
-//     console.log(kittens);
-// });
 
-// adduser()
+function addNewBook(req,res){
+
+    const {userEmail,BookName,Bookstatus,BookDescription} = req.body;
+
+    UserModel.find({ Email:userEmail }, function (err, user) {
+        if (err) return console.error(err);
+        const newBook ={
+            name : BookName,
+            description: BookDescription,
+            status : Bookstatus
+        };
+
+        user[0].books.push(newBook);
+        user[0].save();
+        res.send(user[0])
+    });
+}
+
+
 
 
 
 
 module.exports = {
     adduser: adduser,
-    doSomething: doSomething
+    getAllUsers: getAllUsers,
+    addNewBook:addNewBook
 };
