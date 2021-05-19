@@ -80,6 +80,27 @@ function addNewBook(req,res){
     });
 }
 
+function deleteBooks(req, res) {
+    const index = Number(req.params.index);
+    const { email } = req.query;
+    UserModel.find({ Email: email }, (err, userBooks) => {
+
+
+        console.log(index)
+
+        const newBookArry = userBooks[0].books.filter((book, i) => {
+            return i !== index
+        });
+        userBooks[0].books = newBookArry;
+        userBooks[0].save();
+
+
+        res.send('hellooooooooooo')
+    });
+
+    
+}
+
 
 
 
@@ -88,5 +109,6 @@ function addNewBook(req,res){
 module.exports = {
     adduser: adduser,
     getAllUsers: getAllUsers,
-    addNewBook:addNewBook
+    addNewBook:addNewBook,
+    deleteBooks:deleteBooks
 };
